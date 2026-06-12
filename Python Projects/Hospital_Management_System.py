@@ -34,7 +34,7 @@ def addPatient():
     pmob = input("Enter Patient Mobile No : ")
     pdisease = input("Explain Disease / Problem : ")
     data = {pid : [pname , page , pgender , pmob , pdisease ]}
-    file = open("patient.bin" , "ab" )
+    file = open("Patient.bin" , "ab" )
     pickle.dump(data , file)
     file.close
     print("\n\t\tPatient Added Succesfully ")
@@ -117,6 +117,138 @@ def deletePatient():
     else:
         print("\n\tPatient Not Found ")
 
+# A method To Add A Doctors's Information
+def addDoctor():
+    did = input("\n\tEnter New Doctor ID : ")
+    dname = input("\tEnter Doctor Name : ")
+    dspec =  input("\tEnter Doctor Speciality : ")
+    active = 1
+    data = {did:[ dname , dspec , active ]}
+    file = open("doctor.bin" , "ab")          
+    pickle.dump(data, file )
+    print(f"\n\t\tDoctor {dname} Added Succesfully!")
+    file.close()
+    file = open("appointment.bin" , "ab")
+    data = {did:{"1PM":0,"2PM":0,"3PM":0,"4PM":0}}
+    pickle.dump(data,file)
+    file.close()
+
+
+# A method To Get All Doctors's Information 
+def getAllDoctors():
+    doc = dict()
+    file = open("doctor.bin" , "rb")
+    try:
+        while True :
+            doc.update(pickle.load(file))
+    except:
+        pass
+    file.close()
+    return doc
+
+
+
+
+# A method To View All Doctors's Information 
+def viewAllDoctors():
+    doc = getAllDoctors()
+    for did ,info in doc.items():
+        print("\n\tDoctor ID : " , did)
+        print("\tDoctor Name : " , info[0])
+        print("\tDoctor Speciality : " , info[1])
+        print("\tDoctor Active : " ,"Active" if info[2]==1 else "Inactive")
+        print("\t****************************************************")
+        
+# A method To Get All Appointments 
+def getAllAppointments():
+    app = dict()
+    file = open("appointment.bin" , "rb")
+    try:
+        while True :
+            app.update(pickle.load(file))
+    except:
+        pass
+    file.close()
+    return app
+
+
+# A method To Mark Active/Inactive To A Doctor
+def activeDoctor():
+    did = input("\n\tEnter Doctor Id To mark A/In : ")
+    doc = getAllDoctors()
+    d = doc.get(did , False)
+    if d:
+        print(f"\n\tDoctor {d[0]} is " , "Active" if d[2]==1 else "InActive")
+        if d[2]==1:
+            ch = input("\tDo You Want To Mark Inactive (Y/n)")
+            if ch in "Yy":
+                d[2] = 0
+                print(f"\tDoctor {d[0]} is InActive Now!")
+            else:
+                print(f"\n\tDoctor {d[0]} is still " , "Active" if d[2]==1 else "InActive")
+        else:
+            ch = input("\tDo You Want To Mark Active (Y/n)")
+            if ch in "Yy":
+                d[2] = 1
+                print(f"\tDoctor {d[0]} is Active Now!")
+            else:
+                print(f"\tDoctor {d[0]} is still " , "Active" if d[2]==1 else "InActive")
+        doc.update({did:d})  # ye line samaj nahi aai
+        #print(doc)
+        file = open("doctor.bin" , "wb")
+        for did , info in doc.items():
+            pickle.dump({did:info},file)
+        file.close()
+    else:
+        print("\n\tDoctor Not Found")
+
+#A Method to book An Appointment
+def bookAnAppointment():
+    pid = input("\n\tEnter Patient Id : ")
+    pat = getAllPatients().get(pid,False)
+    if pat:
+        print("\n\tPatient Name : " , pat[0] )
+        print("\tPatient Age : " , pat[1] )
+        print("\tPatient Disease : " , pat[4] )
+        did = input("\n\tEnter Doctor ID : ")
+        doc = getAllDoctors().get(did,False)
+        if doc:
+            if doc[2]==1:
+                print("\tDoctor Name : " , doc[0])
+                print("\tDoctor Speciality : " , doc[1])
+                doc = getAllAppointments() # ye samaj nahi aaya
+                print(doc)
+                app = doc.get(did)  # ye samaj nahi aaya
+                print(app)
+                print("\tAll Slots")
+                i = 1
+                li = []
+                for k,v in app.items():
+                    print(f"\t{i}.",k , "\tAvailable" if v==0 else "\tBooked")
+                    i+=1
+                    li.append(k)
+                ch = int(input("\n\tSelect Your Slot(1-4) : ")) 
+                if app.get(li[ch-1])==0:
+                    app[li[ch-1]]=1
+                    print("\n\tAppointment Booked!")
+                else:
+                    print("\n\tSlot Already Booked!")
+                doc.update({did:app}) # ye samaj nahi aaya
+                file = open("appointment.bin" , "wb")  # ye samaj nahi aaya
+                for k,v in doc.items():
+                    pickle.dump({k:v}, file)# ye samaj nahi aaya
+                file.close()
+                
+                    
+
+                
+            else:
+                print("\tDoctor is Inactive! Not Avilable Right Now !")
+        else:
+            print("\n\tDoctor Not Found! : ")
+    else:
+        print("\n\tPatient Not Found!")
+
 
 
 #Dashboard
@@ -150,6 +282,21 @@ while True:
     elif ch==4:
         deletePatient()
         input("\n\t\tPress Enter To Continue ...   ")
+    elif ch==5:
+        addDoctor()
+        input("\n\t\tPress Enter To Continue ...   ")
+    elif ch==6:
+        viewAllDoctors()
+        input("\n\t\tPress Enter To Continue ...   ")
+    elif ch==7:
+        activeDoctor()
+        input("\n\t\tPress Enter To Continue ...   ")
+    elif ch==8:
+        bookAnAppointment()
+        input("\n\t\tPress Enter To Continue ...   ")
+        
+        
+            
 
 
 
