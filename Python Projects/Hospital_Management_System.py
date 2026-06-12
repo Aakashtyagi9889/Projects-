@@ -238,10 +238,6 @@ def bookAnAppointment():
                 for k,v in doc.items():
                     pickle.dump({k:v}, file)# ye samaj nahi aaya
                 file.close()
-                
-                    
-
-                
             else:
                 print("\tDoctor is Inactive! Not Avilable Right Now !")
         else:
@@ -249,7 +245,16 @@ def bookAnAppointment():
     else:
         print("\n\tPatient Not Found!")
 
-
+#A Method to View All Appointments
+def viewAllAppointments():
+    app = getAllAppointments()
+    for did,slots in app.items():
+        doc = getAllDoctors().get(did)
+        print("\n\tDoctor Name : " , doc[0])
+        print("\tDoctor Speciality : " , doc[1])
+        for k ,v in slots.items():
+            if v == 1:
+                print(f"\t{k}  \tBooked")
 
 #Dashboard
 while True:
@@ -294,6 +299,12 @@ while True:
     elif ch==8:
         bookAnAppointment()
         input("\n\t\tPress Enter To Continue ...   ")
+    elif ch==9:
+        viewAllAppointments()
+        input("\n\t\tPress Enter To Continue ...   ")
+    else:
+        input("\n\tWrong Entered\n\tTry Again!\n\t\tPress Enter To Continue ...  ")
+
         
         
             
