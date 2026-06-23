@@ -14,6 +14,15 @@ transaction(accno , credit , debit , balance , time_stamps)
 """
 
 
+
+# IMPORTING REQUIRED LIBRARIES
+from utils import accountHolder
+
+
+
+
+
+
 #  Dashboard
 
 while True:
@@ -29,5 +38,11 @@ while True:
   ''')
   ch = int(input("\tSelect Option : "))
   if  ch ==0:
-    print("THANK YOU FOR USING OUR BANK MANAGEMENT SYSTEM! ")
-    break
+      print("THANK YOU FOR USING OUR BANK MANAGEMENT SYSTEM! ")
+      break
+  elif ch==1:
+    accountHolder.addAccount()
+    input("\n Press Enter to Continue...")
+  elif ch==2:
+    accountHolder.view_accounts()
+    input("\n Press Enter to Continue...")
