@@ -30,10 +30,9 @@ while True:
       1. Add New Account Holder
       2. View Account Holder
       3. Update Account Holder Information
-      4. Deposite Ammount
-      5. Withdraw Ammount
-      6. Freeze An Account
-      7. Transaction History
+      4. Deposite Ammount / Withdraw Ammount
+      5. Freeze An Account
+      6. Transaction History
       0. Exit
   ''')
   ch = int(input("\tSelect Option : "))
@@ -45,4 +44,10 @@ while True:
     input("\n Press Enter to Continue...")
   elif ch==2:
     accountHolder.view_accounts()
+    input("\n Press Enter to Continue...")
+  elif ch==3:
+    accountHolder.update_account()  
+    input("\n Press Enter to Continue...")
+  elif ch==4:
+    accountHolder.deposit_amount()
     input("\n Press Enter to Continue...")
