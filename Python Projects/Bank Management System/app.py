@@ -51,3 +51,11 @@ while True:
   elif ch==4:
     accountHolder.deposit_amount()
     input("\n Press Enter to Continue...")
+  elif ch==5:
+    accountHolder.active_account()
+    input("\n Press Enter to Continue...")
+  elif ch==6:
+    accountHolder.show_transactions()
+    input("\n Press Enter to Continue...")
+  else:
+    input("\n\tWrong Entered! \n\tTry Again!\n\n\t   Press Enter to Continue...")
