@@ -1,5 +1,8 @@
 import pandas as pd 
 import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 #Web Application's page Configuration
 st.set_page_config(layout='wide' , page_title='Sales Analysis')
@@ -27,6 +30,7 @@ df['GrossManuAmt'] = df['Units Sold'] * df['Manufacturing Price']
 
 # Copy a dataset 
 filtered_df = df.copy()
+filtered_df['Month'] = filtered_df['Date'].dt.strftime('%B')
 
 # Filters
 col1 , col2 , col3 , col4 , col5 = st.columns(5)
@@ -63,6 +67,27 @@ with col4:
   st.metric('Sold Quantity' , filtered_df['Units Sold'].sum().round(2))
 with col5:
   st.metric('Total No. of Sales' , filtered_df.shape[0])
+
+#Trend and Insight charts
+column = st.selectbox('Select Data' ,df.drop(columns='Year').select_dtypes(include=np.number).columns)
+col1 , col2 = st.columns(2)
+with col1:
+  fig1 , ax1 = plt.subplots(figsize = (8,4))
+  pbs = filtered_df.groupby('Segment').agg({column : 'sum'}).reset_index()
+  ax1.bar(pbs['Segment'] , pbs[column])
+  plt.xlabel('Segment Names')
+  plt.ylabel(column)
+  st.pyplot(fig1)
+with col2:
+  fig2 , ax2 = plt.subplots(figsize = (8,4))
+  sns.histplot(x = column , data = filtered_df , kde=True , ax = ax2)
+  st.pyplot(fig2)
+   
+filtered_df = filtered_df.sort_values('Date')
+monthly_data = filtered_df.groupby('Month' ,  sort =False)[column].sum().reset_index()
+fig3 , ax3 =  plt.subplots(figsize = (14,4))
+ax3.plot(monthly_data['Month'] , monthly_data[column])
+st.pyplot(fig3)
 
 # Sample Dataset View
 st.dataframe(filtered_df , height=250)
